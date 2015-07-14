@@ -18,7 +18,6 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
                 return pagesByCategory(tracker['categories'][category]).then(function(urls){
                     return extractDataFromUrls(urls, category);
                 }).then(function(data){
-                    console.log(data.length)
                     return Promise.all(_.map(data, function(chunk){
                         return insertMongo(chunk, mongo.collection)
                     })).then(function(){
@@ -111,6 +110,7 @@ function insertMongo(chunk, collection){
         return _.chain(data).flatten().reject(function(torrent){ return _.contains(tracker.blacklistUrls, torrent.link)}).value();
     }).then(function(data){
         return new Promise(function(resolve, reject){
+            console.log(data.length)
             if(data.length > 0)
                 collection.insert(data, function(err, result){
                     if(err) reject();
