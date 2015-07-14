@@ -92,6 +92,7 @@ function extractDataFromUrls(urls, category){
             var $ = cheerio.load(_body)
             var self = {'category': tracker['categories'][category], '$': $};
             var rows = tracker['parser']['content'].apply(self, [])
+            console.log(rows.length)
             return _.map(rows, function(row){
                 return tracker['parser']['objectFromContent'].apply(self, [row])
             })
@@ -110,7 +111,6 @@ function insertMongo(chunk, collection){
         return _.chain(data).flatten().reject(function(torrent){ return _.contains(tracker.blacklistUrls, torrent.link)}).value();
     }).then(function(data){
         return new Promise(function(resolve, reject){
-            console.log(data.length)
             if(data.length > 0)
                 collection.insert(data, function(err, result){
                     if(err) reject();
