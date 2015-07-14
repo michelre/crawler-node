@@ -22,10 +22,14 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
                     return Promise.all(_.map(data, function(chunk){
                         return insertMongo(chunk, mongo.collection)
                     }));
+                }).catch(function(err){
+                    console.log("FOO CATCH", err)
                 })
             })).then(function(){
+            console.log("FOO")
             //mongo.db.close();
-        }).catch(function(){
+        }).catch(function(err){
+            console.log("FOO", err)
             //mongo.db.close();
         });
     }).catch(function(err){
