@@ -109,8 +109,10 @@ function insertMongo(chunk, collection){
     }).then(function(data){
         return new Promise(function(resolve, reject){
             if(data.length > 0)
-                collection.insert(data);
-            resolve();
+                collection.insert(data, function(err, result){
+                    if(err) reject();
+                    resolve();
+                });
         });
     });
 }
