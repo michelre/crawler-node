@@ -19,6 +19,7 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
                     return extractDataFromUrls(urls, category);
                 }).then(function(data){
                     return Promise.all(_.map(data, function(chunk){
+                        console.log(chunk.length)
                         return insertMongo(chunk, mongo.collection)
                     })).then(function(){
                         console.log('DONE')
