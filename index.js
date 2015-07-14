@@ -110,7 +110,7 @@ function insertMongo(chunk, collection){
         return new Promise(function(resolve, reject){
             if(data.length > 0)
                 collection.insert(data, function(err, result){
-                    console.log(data)
+                    console.log(data.length)
                     if(err) reject();
                     resolve();
                 });
