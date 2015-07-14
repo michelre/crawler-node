@@ -13,30 +13,28 @@ var args = parseArguments();
 var tracker = configuration[args['tracker']]();
 
 dns.lookup('mongo.mongo.docker', function(err, host){
-   console.log(host)
-});
-
-openMongoConnection().then(function(mongo){
-    Promise.all(_.map(_.keys(tracker.categories), function(category){
-        return pagesByCategory(tracker['categories'][category]).then(function(urls){
-            return extractDataFromUrls(urls, category);
-        }).then(function(data){
-            return Promise.all(_.map(data, function(chunk){
-                return insertMongo(chunk, mongo.collection)
-            }));
-        })
-    })).then(function(){
-        mongo.db.close();
-    }).catch(function(){
-        mongo.db.close();
+    openMongoConnection(mongoHost).then(function(mongo){
+        Promise.all(_.map(_.keys(tracker.categories), function(category){
+                return pagesByCategory(tracker['categories'][category]).then(function(urls){
+                    return extractDataFromUrls(urls, category);
+                }).then(function(data){
+                    return Promise.all(_.map(data, function(chunk){
+                        return insertMongo(chunk, mongo.collection)
+                    }));
+                })
+            })).then(function(){
+            mongo.db.close();
+        }).catch(function(){
+            mongo.db.close();
+        });
+    }).catch(function(err){
+        console.log('Problem while connecting to Mongo ' + err);
     });
-}).catch(function(err){
-    console.log('Problem while connecting to Mongo ' + err);
 });
 
 function openMongoConnection(){
-    var host = process.env.MONGO_PORT_27017_TCP_ADDR || 'localhost';
-    var port = process.env.MONGO_PORT_27017_TCP_PORT || 27017;
+    var host = mongoHost || 'localhost';
+    var port = 27017;
 
     return new Promise(function(resolve, reject){
         MongoClient.connect('mongodb://' + host + ':' + port + '/torrents', function(err, db) {
