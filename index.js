@@ -81,7 +81,6 @@ function pagesByCategory(category){
 }
 
 function extractDataFromUrls(urls, category){
-    console.log(urls.length, category)
     var promises = _.map(urls, function(url){
         return request({
             url: url,
@@ -103,6 +102,7 @@ function extractDataFromUrls(urls, category){
     var chunks = _.chain(promises).groupBy(function(p, index){
         return Math.floor(index/10);
     }).toArray().value();
+    console.log(chunks)
     return new Promise(function(resolve, reject){
         resolve(chunks)
     })
