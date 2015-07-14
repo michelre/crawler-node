@@ -18,8 +18,8 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
                 return pagesByCategory(tracker['categories'][category]).then(function(urls){
                     return extractDataFromUrls(urls, category);
                 }).then(function(data){
+                    console.log(data.length)
                     return Promise.all(_.map(data, function(chunk){
-                        console.log(chunk.length)
                         return insertMongo(chunk, mongo.collection)
                     })).then(function(){
                         console.log('DONE')
