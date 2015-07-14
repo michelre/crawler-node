@@ -20,12 +20,14 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
                 }).then(function(data){
                     return Promise.all(_.map(data, function(chunk){
                         return insertMongo(chunk, mongo.collection)
-                    }));
+                    })).then(function(){
+                        console.log('DONE')
+                    });
                 })
             })).then(function(){
-            mongo.db.close();
+            //mongo.db.close();
         }).catch(function(){
-            mongo.db.close();
+            //mongo.db.close();
         });
     }).catch(function(err){
         console.log('Problem while connecting to Mongo ' + err);
@@ -110,7 +112,6 @@ function insertMongo(chunk, collection){
         return new Promise(function(resolve, reject){
             if(data.length > 0)
                 collection.insert(data, function(err, result){
-                    console.log(data.length)
                     if(err) reject();
                     resolve();
                 });
