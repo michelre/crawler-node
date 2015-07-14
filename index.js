@@ -7,9 +7,14 @@ var Promise = require('bluebird');
 var configuration = require('./configuration/crawler');
 var MongoClient = require('mongodb').MongoClient;
 var iconv = require('iconv-lite');
+var dns = require('dns');
 
 var args = parseArguments();
 var tracker = configuration[args['tracker']]();
+
+dns.lookup('mongo.mongo.docker', function(err, host){
+   console.log(host)
+});
 
 openMongoConnection().then(function(mongo){
     Promise.all(_.map(_.keys(tracker.categories), function(category){
