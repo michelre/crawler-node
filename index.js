@@ -12,7 +12,7 @@ var dns = require('dns');
 var args = parseArguments();
 var tracker = configuration[args['tracker']]();
 
-dns.lookup('mongo.mongo.docker', function(err, host){
+dns.lookup('mongo.mongo.docker', function(err, mongoHost){
     openMongoConnection(mongoHost).then(function(mongo){
         Promise.all(_.map(_.keys(tracker.categories), function(category){
                 return pagesByCategory(tracker['categories'][category]).then(function(urls){
@@ -32,7 +32,7 @@ dns.lookup('mongo.mongo.docker', function(err, host){
     });
 });
 
-function openMongoConnection(){
+function openMongoConnection(mongoHost){
     var host = mongoHost || 'localhost';
     var port = 27017;
 
