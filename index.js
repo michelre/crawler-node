@@ -16,6 +16,7 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
     openMongoConnection(mongoHost).then(function(mongo){
         Promise.all(_.map(_.keys(tracker.categories), function(category){
                 return pagesByCategory(tracker['categories'][category]).then(function(urls){
+                    console.log(category, urls.length)
                     return extractDataFromUrls(urls, category);
                 }).then(function(data){
                     return Promise.all(_.map(data, function(chunk){
