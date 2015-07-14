@@ -21,9 +21,7 @@ dns.lookup('mongo.mongo.docker', function(err, mongoHost){
                 }).then(function(data){
                     return Promise.all(_.map(data, function(chunk){
                         return insertMongo(chunk, mongo.collection)
-                    })).then(function(){
-                        console.log('DONE')
-                    });
+                    }));
                 })
             })).then(function(){
             //mongo.db.close();
@@ -93,7 +91,6 @@ function extractDataFromUrls(urls, category){
             var $ = cheerio.load(_body)
             var self = {'category': tracker['categories'][category], '$': $};
             var rows = tracker['parser']['content'].apply(self, [])
-            console.log(rows.length)
             return _.map(rows, function(row){
                 return tracker['parser']['objectFromContent'].apply(self, [row])
             })
